@@ -12,6 +12,7 @@
     "@remotion/fonts": "^4.0.445",
     "@remotion/gif": "^4.0.445",
     "@remotion/google-fonts": "^4.0.445",
+    "@remotion/light-leaks": "^4.0.446",
     "@remotion/lottie": "^4.0.445",
     "@remotion/player": "^4.0.445",
     "@remotion/preload": "^4.0.445",

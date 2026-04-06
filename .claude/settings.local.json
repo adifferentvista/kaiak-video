@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.youtube.com)",
+      "Bash(npx remotion:*)",
+      "Bash(ls node_modules/.bin/remotion*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "WebFetch(domain:kaiak.io)",
+      "Bash(netstat -ano)",
+      "Bash(npm ls:*)",
+      "Bash(npm search:*)",
+      "Bash(node -e \"const d=[];process.stdin.on\\('data',c=>d.push\\(c\\)\\);process.stdin.on\\('end',\\(\\)=>{try{const pkgs=JSON.parse\\(d.join\\(''\\)\\);pkgs.forEach\\(p=>console.log\\(p.name+' -- '+p.description\\)\\)}catch\\(e\\){console.log\\('fallback'\\)}}\\)\")",
+      "Bash(node -e \"const d=[];process.stdin.on\\('data',c=>d.push\\(c\\)\\);process.stdin.on\\('end',\\(\\)=>{try{const pkgs=JSON.parse\\(d.join\\(''\\)\\);pkgs.filter\\(p=>p.name.startsWith\\('@remotion/'\\)\\).forEach\\(p=>console.log\\(p.name+' -- '+p.description\\)\\)}catch\\(e\\){console.log\\('fallback'\\)}}\\)\")",
+      "Bash(gh search:*)",
+      "Bash(node -e \"const d=[];process.stdin.on\\('data',c=>d.push\\(c\\)\\);process.stdin.on\\('end',\\(\\)=>{try{const p=JSON.parse\\(d.join\\(''\\)\\);console.log\\(p[0].name,'--',p[0].description\\)}catch\\(e\\){}}\\)\")",
+      "Bash(node -e \"const d=[];process.stdin.on\\('data',c=>d.push\\(c\\)\\);process.stdin.on\\('end',\\(\\)=>{try{const p=JSON.parse\\(d.join\\(''\\)\\);p.slice\\(0,15\\).forEach\\(x=>console.log\\(x.name,'--',x.description\\)\\)}catch\\(e\\){}}\\)\")",
+      "Bash(node -e \"const d=[];process.stdin.on\\('data',c=>d.push\\(c\\)\\);process.stdin.on\\('end',\\(\\)=>{try{const p=JSON.parse\\(d.join\\(''\\)\\);p.slice\\(0,5\\).forEach\\(x=>console.log\\(x.name,'--',x.description\\)\\)}catch\\(e\\){console.log\\('no results'\\)}}\\)\")",
+      "WebFetch(domain:www.lennysnewsletter.com)",
+      "WebFetch(domain:www.chaseai.io)"
+    ]
+  }
+}

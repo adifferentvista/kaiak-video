@@ -35,6 +35,9 @@ import { PerspectiveLaunchWindows } from "./components/PerspectiveLaunchWindows"
 import { KineticTypography } from "./components/KineticTypography";
 import { CodeDiff } from "./components/CodeDiff";
 import { MapJourney } from "./components/MapJourney";
+import { KineticMarketing } from "./components/KineticMarketing";
+import { TransparentCTA } from "./components/TransparentCTA";
+import { CinematicIntro } from "./components/CinematicIntro";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -173,7 +176,7 @@ export const RemotionRoot: React.FC = () => {
           hookText: "23 hours in meetings.",
           hookHighlight: "You only need 18.",
           category: "Leadership" as const,
-          visualType: "dashboard" as const,
+          visualType: "chat" as const,
         }}
         durationInFrames={150}
         fps={30}
@@ -309,7 +312,7 @@ export const RemotionRoot: React.FC = () => {
           hookText: "Weekend board reports?",
           hookHighlight: "10 minutes. Done.",
           category: "Practical AI" as const,
-          visualType: "calendar" as const,
+          visualType: "chat" as const,
         }}
         durationInFrames={150}
         fps={30}
@@ -421,6 +424,32 @@ export const RemotionRoot: React.FC = () => {
           ],
         }}
         durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
+      {/* === Remotion Reference Prompts === */}
+      <Composition
+        id="Ref-KineticMarketing"
+        component={KineticMarketing}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Ref-TransparentCTA"
+        component={TransparentCTA}
+        durationInFrames={210}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Ref-CinematicIntro"
+        component={CinematicIntro}
+        durationInFrames={240}
         fps={30}
         width={1920}
         height={1080}
