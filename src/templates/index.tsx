@@ -1,5 +1,7 @@
 export { BlogHeader } from "./BlogHeader";
 export type { BlogHeaderProps } from "./BlogHeader";
+export { FeaturedImage } from "./FeaturedImage-20260407";
+export type { FeaturedImageProps } from "./FeaturedImage-20260407";
 export { BlogHero } from "./BlogHero";
 export type { BlogHeroProps } from "./BlogHero";
 export { StatHighlight } from "./StatHighlight";

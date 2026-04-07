@@ -45,6 +45,21 @@ export const blogHeroVisualSchema = z.object({
     .default("dashboard"),
 });
 
+export const featuredImageSchema = z.object({
+  hookText: z.string().default("Stop doing this."),
+  hookHighlight: z.string().optional(),
+  pillar: z
+    .enum([
+      "leadership",
+      "systems-thinking",
+      "practical-ai",
+      "no-admin-life",
+      "education",
+    ])
+    .default("practical-ai"),
+  imagePath: z.string().default("blog/images/placeholder.png"),
+});
+
 export const blogHeaderSchema = z.object({
   hookText: z.string().default("Stop doing this."),
   hookHighlight: z.string().optional(),

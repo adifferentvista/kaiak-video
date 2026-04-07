@@ -12,11 +12,10 @@ import { CourseOverviewHeroicons } from "./components/CourseOverviewHeroicons";
 import { CourseOverviewFluent } from "./components/CourseOverviewFluent";
 import { TerminalIntro } from "./components/TerminalIntro";
 import { BarChart } from "./components/BarChart";
-import { SocialProof } from "./components/SocialProof";
-import { LogoTest } from "./components/LogoTest";
 import { PerspectiveLaunch } from "./components/PerspectiveLaunch";
 import {
   BlogHeader,
+  FeaturedImage,
   BlogHero,
   BlogHeroVisual,
   StatHighlight,
@@ -25,6 +24,7 @@ import {
   CallToAction,
 } from "./templates";
 import {
+  featuredImageSchema,
   blogHeaderSchema,
   blogHeroSchema,
   blogHeroVisualSchema,
@@ -33,7 +33,7 @@ import {
   frameworkDiagramSchema,
   callToActionSchema,
 } from "./templates/schemas";
-import { PerspectiveLaunchWindows } from "./components/PerspectiveLaunchWindows";
+import { PerspectiveLaunchWindows } from "./components/PerspectiveLaunchWindows-20260407";
 import { KineticTypography } from "./components/KineticTypography";
 import { CodeDiff } from "./components/CodeDiff";
 import { MapJourney } from "./components/MapJourney";
@@ -44,134 +44,29 @@ import { CinematicIntro } from "./components/CinematicIntro";
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* === KAIAK Brand Videos === */}
+      {/* ============================================
+          1. ACTIVE — Currently being refined
+          ============================================ */}
+      {/* Featured Image composite template */}
       <Composition
-        id="HeroVideo"
-        component={HeroVideo}
-        durationInFrames={480}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="ToolShowcase"
-        component={ToolShowcase}
-        durationInFrames={280}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="BeforeAfter"
-        component={BeforeAfter}
-        durationInFrames={270}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="BeforeAfter-Phosphor"
-        component={BeforeAfterPhosphor}
-        durationInFrames={270}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="BeforeAfter-Heroicons"
-        component={BeforeAfterHeroicons}
-        durationInFrames={270}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="BeforeAfter-Fluent"
-        component={BeforeAfterFluent}
-        durationInFrames={270}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="TestimonialSpotlight"
-        component={TestimonialSpotlight}
-        durationInFrames={280}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="CourseOverview"
-        component={CourseOverview}
-        durationInFrames={270}
+        id="Active-FeaturedImage-Sample"
+        component={FeaturedImage}
+        schema={featuredImageSchema}
+        defaultProps={{
+          hookText: "47 emails sorted.",
+          hookHighlight: "Zero willpower required.",
+          pillar: "practical-ai" as const,
+          imagePath: "blog/images/placeholder.png",
+        }}
+        durationInFrames={1}
         fps={30}
         width={1920}
         height={1080}
       />
 
+      {/* Blog Headers (static stills) */}
       <Composition
-        id="CourseOverview-Heroicons"
-        component={CourseOverviewHeroicons}
-        durationInFrames={270}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="CourseOverview-Fluent"
-        component={CourseOverviewFluent}
-        durationInFrames={270}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-
-      {/* === Inspiration Demos === */}
-      <Composition
-        id="PerspectiveLaunch"
-        component={PerspectiveLaunch}
-        durationInFrames={300}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="PerspectiveLaunch-Windows"
-        component={PerspectiveLaunchWindows}
-        durationInFrames={300}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="KineticTypography"
-        component={KineticTypography}
-        durationInFrames={180}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="CodeDiff"
-        component={CodeDiff}
-        durationInFrames={210}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="MapJourney"
-        component={MapJourney}
-        durationInFrames={240}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-
-      {/* === Blog Headers (New Template — one per pillar) === */}
-      <Composition
-        id="Header-Leadership"
+        id="Rejected-Header-Leadership"
         component={BlogHeader}
         schema={blogHeaderSchema}
         defaultProps={{
@@ -185,7 +80,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Header-Education"
+        id="Rejected-Header-Education"
         component={BlogHeader}
         schema={blogHeaderSchema}
         defaultProps={{
@@ -199,7 +94,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Header-Systems"
+        id="Rejected-Header-Systems"
         component={BlogHeader}
         schema={blogHeaderSchema}
         defaultProps={{
@@ -213,7 +108,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Header-PracticalAI"
+        id="Rejected-Header-PracticalAI"
         component={BlogHeader}
         schema={blogHeaderSchema}
         defaultProps={{
@@ -227,7 +122,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Header-NoAdmin"
+        id="Rejected-Header-NoAdmin"
         component={BlogHeader}
         schema={blogHeaderSchema}
         defaultProps={{
@@ -240,10 +135,55 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-
-      {/* === Blog: Meeting Audit (Full Image Set) === */}
+      {/* BlogHeroVisual (animated headers with floating panels) */}
       <Composition
-        id="MeetingAudit-1-Hero"
+        id="Rejected-VisualHero-Inbox"
+        component={BlogHeroVisual}
+        schema={blogHeroVisualSchema}
+        defaultProps={{
+          hookText: "47 emails sorted.",
+          hookHighlight: "Zero willpower required.",
+          category: "Practical AI" as const,
+          visualType: "inbox" as const,
+        }}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Rejected-VisualHero-Dashboard"
+        component={BlogHeroVisual}
+        schema={blogHeroVisualSchema}
+        defaultProps={{
+          hookText: "Your first 100 days.",
+          hookHighlight: "5 systems that change everything.",
+          category: "Leadership" as const,
+          visualType: "dashboard" as const,
+        }}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Rejected-VisualHero-Documents"
+        component={BlogHeroVisual}
+        schema={blogHeroVisualSchema}
+        defaultProps={{
+          hookText: "Weekend board reports?",
+          hookHighlight: "10 minutes. Done.",
+          category: "Practical AI" as const,
+          visualType: "chat" as const,
+        }}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      {/* Meeting Audit — full blog image set */}
+      <Composition
+        id="Rejected-MeetingAudit-1-Hero"
         component={BlogHeroVisual}
         schema={blogHeroVisualSchema}
         defaultProps={{
@@ -258,7 +198,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="MeetingAudit-2-Framework"
+        id="Rejected-MeetingAudit-2-Framework"
         component={FrameworkDiagram}
         schema={frameworkDiagramSchema}
         defaultProps={{
@@ -267,12 +207,14 @@ export const RemotionRoot: React.FC = () => {
           layers: [
             {
               label: "Catalog",
-              description: "List every recurring meeting and its stated purpose",
+              description:
+                "List every recurring meeting and its stated purpose",
               color: "#8b5cf6",
             },
             {
               label: "Classify",
-              description: "Score each meeting: Decision, Information, or Ritual?",
+              description:
+                "Score each meeting: Decision, Information, or Ritual?",
               color: "#e2711d",
             },
             {
@@ -289,14 +231,15 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="MeetingAudit-3-Stat"
+        id="Rejected-MeetingAudit-3-Stat"
         component={StatHighlight}
         schema={statHighlightSchema}
         defaultProps={{
           value: 5,
           suffix: "hrs",
           label: "Reclaimed Every Week",
-          description: "The average school leader spends 23 hours per week in meetings. Most can safely cut 5.",
+          description:
+            "The average school leader spends 23 hours per week in meetings. Most can safely cut 5.",
           accentColor: "#e2711d",
         }}
         durationInFrames={120}
@@ -305,7 +248,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="MeetingAudit-4-Compare"
+        id="Rejected-MeetingAudit-4-Compare"
         component={ComparisonSplit}
         schema={comparisonSplitSchema}
         defaultProps={{
@@ -332,12 +275,13 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="MeetingAudit-5-CTA"
+        id="Rejected-MeetingAudit-5-CTA"
         component={CallToAction}
         schema={callToActionSchema}
         defaultProps={{
           headline: "Want help auditing your calendar?",
-          subtext: "Book a free 90-minute strategy session and we'll identify your top 5 time-saving opportunities.",
+          subtext:
+            "Book a free 90-minute strategy session and we'll identify your top 5 time-saving opportunities.",
           buttonText: "Book Your Free Strategy Call",
           style: "default",
         }}
@@ -346,62 +290,169 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-
-      {/* === BlogHeroVisual Variants === */}
+      {/* ============================================
+          2. FAVORITES — Best compositions so far
+          ============================================ */}
       <Composition
-        id="VisualHero-Inbox"
-        component={BlogHeroVisual}
-        schema={blogHeroVisualSchema}
-        defaultProps={{
-          hookText: "47 emails sorted.",
-          hookHighlight: "Zero willpower required.",
-          category: "Practical AI" as const,
-          visualType: "inbox" as const,
-        }}
-        durationInFrames={150}
+        id="Fav-PerspectiveLaunch"
+        component={PerspectiveLaunch}
+        durationInFrames={300}
         fps={30}
         width={1920}
         height={1080}
       />
       <Composition
-        id="VisualHero-Dashboard"
-        component={BlogHeroVisual}
-        schema={blogHeroVisualSchema}
-        defaultProps={{
-          hookText: "Your first 100 days.",
-          hookHighlight: "5 systems that change everything.",
-          category: "Leadership" as const,
-          visualType: "calendar" as const,
-        }}
-        durationInFrames={150}
+        id="Fav-PerspectiveLaunch-Windows"
+        component={PerspectiveLaunchWindows}
+        durationInFrames={300}
         fps={30}
         width={1920}
         height={1080}
       />
       <Composition
-        id="VisualHero-Documents"
-        component={BlogHeroVisual}
-        schema={blogHeroVisualSchema}
-        defaultProps={{
-          hookText: "Weekend board reports?",
-          hookHighlight: "10 minutes. Done.",
-          category: "Practical AI" as const,
-          visualType: "chat" as const,
-        }}
-        durationInFrames={150}
+        id="Fav-MapJourney"
+        component={MapJourney}
+        durationInFrames={240}
         fps={30}
         width={1920}
         height={1080}
       />
-
-      {/* === Blog Templates (Individual) === */}
       <Composition
-        id="Blog-MeetingAudit"
+        id="Fav-CinematicIntro"
+        component={CinematicIntro}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Fav-KineticTypography"
+        component={KineticTypography}
+        durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Fav-CodeDiff"
+        component={CodeDiff}
+        durationInFrames={210}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      {/* ============================================
+          3. BRAND VIDEOS — KAIAK marketing
+          ============================================ */}
+      <Composition
+        id="Brand-HeroVideo"
+        component={HeroVideo}
+        durationInFrames={480}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-ToolShowcase"
+        component={ToolShowcase}
+        durationInFrames={280}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-BeforeAfter"
+        component={BeforeAfter}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-BeforeAfter-Heroicons"
+        component={BeforeAfterHeroicons}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-BeforeAfter-Fluent"
+        component={BeforeAfterFluent}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-TestimonialSpotlight"
+        component={TestimonialSpotlight}
+        durationInFrames={280}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-CourseOverview"
+        component={CourseOverview}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-CourseOverview-Heroicons"
+        component={CourseOverviewHeroicons}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Brand-CourseOverview-Fluent"
+        component={CourseOverviewFluent}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      {/* ============================================
+          4. REFERENCE — Remotion prompt examples
+          ============================================ */}
+      <Composition
+        id="Ref-Ref-KineticMarketing"
+        component={KineticMarketing}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Ref-Ref-TransparentCTA"
+        component={TransparentCTA}
+        durationInFrames={210}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      {/* ============================================
+          5. ARCHIVE — Old demos & tests
+          ============================================ */}
+      <Composition
+        id="Old-BeforeAfter-Phosphor"
+        component={BeforeAfterPhosphor}
+        durationInFrames={270}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Old-Blog-MeetingAudit"
         component={BlogHero}
         schema={blogHeroSchema}
         defaultProps={{
-          title: "The Meeting Audit: How to Reclaim 5 Hours a Week",
-          subtitle: "A step-by-step system for cutting meetings that don't move the needle.",
+          title: "The Meeting Audit",
+          subtitle: "How to Reclaim 5 Hours a Week",
           category: "Systems Thinking",
           readTime: "6 min read",
         }}
@@ -411,12 +462,12 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Blog-AITrainingGap"
+        id="Old-Blog-AITrainingGap"
         component={BlogHero}
         schema={blogHeroSchema}
         defaultProps={{
           title: "68% of Teachers Have Zero AI Training",
-          subtitle: "What that means for your school — and what to do about it.",
+          subtitle: "What that means for your school.",
           category: "AI in Education",
           readTime: "8 min read",
         }}
@@ -426,12 +477,12 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Blog-NotebookLM"
+        id="Old-Blog-NotebookLM"
         component={BlogHero}
         schema={blogHeroSchema}
         defaultProps={{
-          title: "NotebookLM Ate My Board Report (And Made It Better)",
-          subtitle: "How I turned a weekend chore into a 10-minute workflow.",
+          title: "NotebookLM Ate My Board Report",
+          subtitle: "And made it better.",
           category: "Practical AI",
           readTime: "5 min read",
         }}
@@ -441,14 +492,15 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Stat-TeacherTraining"
+        id="Old-Stat-TeacherTraining"
         component={StatHighlight}
         schema={statHighlightSchema}
         defaultProps={{
           value: 68,
           suffix: "%",
           label: "of Teachers Have Zero AI Training",
-          description: "Without structured training, schools risk falling behind as AI reshapes education.",
+          description:
+            "Without structured training, schools risk falling behind.",
           source: "2025 EdTech Survey",
           accentColor: "#3b82f6",
         }}
@@ -458,14 +510,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Stat-HoursSaved"
+        id="Old-Stat-HoursSaved"
         component={StatHighlight}
         schema={statHighlightSchema}
         defaultProps={{
           value: 10,
           suffix: "+",
           label: "Hours Saved Every Week",
-          description: "School leaders using KAIAK systems reclaim their time for strategic leadership.",
+          description: "School leaders using KAIAK systems reclaim their time.",
           accentColor: "#e2711d",
         }}
         durationInFrames={120}
@@ -474,7 +526,7 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="Compare-AutomateProtect"
+        id="Old-Compare-AutomateProtect"
         component={ComparisonSplit}
         schema={comparisonSplitSchema}
         defaultProps={{
@@ -483,18 +535,14 @@ export const RemotionRoot: React.FC = () => {
           leftLabel: "Delegate to AI",
           rightLabel: "Keep Human",
           leftItems: [
-            { text: "Email triage and sorting" },
-            { text: "Report first drafts" },
-            { text: "Meeting agenda prep" },
-            { text: "Policy document search" },
-            { text: "Data entry and logging" },
+            { text: "Email triage" },
+            { text: "Report drafts" },
+            { text: "Meeting prep" },
           ],
           rightItems: [
-            { text: "Parent relationship calls" },
-            { text: "Staff performance reviews" },
-            { text: "Crisis decision-making" },
-            { text: "Vision and culture-setting" },
-            { text: "Student wellbeing conversations" },
+            { text: "Parent calls" },
+            { text: "Staff reviews" },
+            { text: "Crisis decisions" },
           ],
         }}
         durationInFrames={180}
@@ -502,36 +550,8 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-
-      {/* === Remotion Reference Prompts === */}
       <Composition
-        id="Ref-KineticMarketing"
-        component={KineticMarketing}
-        durationInFrames={300}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="Ref-TransparentCTA"
-        component={TransparentCTA}
-        durationInFrames={210}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="Ref-CinematicIntro"
-        component={CinematicIntro}
-        durationInFrames={240}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-
-      {/* === Demo/Test Videos === */}
-      <Composition
-        id="TerminalIntro"
+        id="Old-TerminalIntro"
         component={TerminalIntro}
         durationInFrames={150}
         fps={30}
@@ -539,25 +559,9 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="SocialProof"
-        component={SocialProof}
-        durationInFrames={210}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="BarChart"
+        id="Old-BarChart"
         component={BarChart}
         durationInFrames={120}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="LogoTest"
-        component={LogoTest}
-        durationInFrames={90}
         fps={30}
         width={1920}
         height={1080}
