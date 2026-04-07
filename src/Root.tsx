@@ -16,6 +16,7 @@ import { SocialProof } from "./components/SocialProof";
 import { LogoTest } from "./components/LogoTest";
 import { PerspectiveLaunch } from "./components/PerspectiveLaunch";
 import {
+  BlogHeader,
   BlogHero,
   BlogHeroVisual,
   StatHighlight,
@@ -24,6 +25,7 @@ import {
   CallToAction,
 } from "./templates";
 import {
+  blogHeaderSchema,
   blogHeroSchema,
   blogHeroVisualSchema,
   statHighlightSchema,
@@ -162,6 +164,78 @@ export const RemotionRoot: React.FC = () => {
         id="MapJourney"
         component={MapJourney}
         durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
+      {/* === Blog Headers (New Template — one per pillar) === */}
+      <Composition
+        id="Header-Leadership"
+        component={BlogHeader}
+        schema={blogHeaderSchema}
+        defaultProps={{
+          hookText: "Your AI strategy can't be delegated.",
+          hookHighlight: "Here's why.",
+          pillar: "leadership" as const,
+        }}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Header-Education"
+        component={BlogHeader}
+        schema={blogHeaderSchema}
+        defaultProps={{
+          hookText: "68% of teachers.",
+          hookHighlight: "Zero AI training.",
+          pillar: "education" as const,
+        }}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Header-Systems"
+        component={BlogHeader}
+        schema={blogHeaderSchema}
+        defaultProps={{
+          hookText: "23 hours in meetings.",
+          hookHighlight: "You only need 18.",
+          pillar: "systems-thinking" as const,
+        }}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Header-PracticalAI"
+        component={BlogHeader}
+        schema={blogHeaderSchema}
+        defaultProps={{
+          hookText: "Weekend board reports?",
+          hookHighlight: "10 minutes. Done.",
+          pillar: "practical-ai" as const,
+        }}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="Header-NoAdmin"
+        component={BlogHeader}
+        schema={blogHeaderSchema}
+        defaultProps={{
+          hookText: "I left early on Tuesday.",
+          hookHighlight: "Nobody noticed.",
+          pillar: "no-admin-life" as const,
+        }}
+        durationInFrames={1}
         fps={30}
         width={1920}
         height={1080}

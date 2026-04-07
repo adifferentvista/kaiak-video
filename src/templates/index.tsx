@@ -1,3 +1,5 @@
+export { BlogHeader } from "./BlogHeader";
+export type { BlogHeaderProps } from "./BlogHeader";
 export { BlogHero } from "./BlogHero";
 export type { BlogHeroProps } from "./BlogHero";
 export { StatHighlight } from "./StatHighlight";

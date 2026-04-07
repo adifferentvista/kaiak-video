@@ -45,6 +45,20 @@ export const blogHeroVisualSchema = z.object({
     .default("dashboard"),
 });
 
+export const blogHeaderSchema = z.object({
+  hookText: z.string().default("Stop doing this."),
+  hookHighlight: z.string().optional(),
+  pillar: z
+    .enum([
+      "leadership",
+      "systems-thinking",
+      "practical-ai",
+      "no-admin-life",
+      "education",
+    ])
+    .default("practical-ai"),
+});
+
 export const callToActionSchema = z.object({
   headline: z.string().default("Ready to get started?"),
   subtext: z.string().optional(),
