@@ -24,7 +24,6 @@ import {
   CallToAction,
 } from "./templates";
 import {
-  featuredImageSchema,
   blogHeaderSchema,
   blogHeroSchema,
   blogHeroVisualSchema,
@@ -49,19 +48,35 @@ export const RemotionRoot: React.FC = () => {
           ============================================ */}
       {/* Featured Image composite template */}
       <Composition
-        id="Active-FeaturedImage-Sample"
+        id="Active-FeaturedImage-MeetingAudit"
         component={FeaturedImage}
-        schema={featuredImageSchema}
+
         defaultProps={{
-          hookText: "47 emails sorted.",
-          hookHighlight: "Zero willpower required.",
-          pillar: "practical-ai" as const,
-          imagePath: "blog/images/placeholder.png",
+          hookText: "27 recurring meetings.",
+          hookHighlight: "I only needed 12.",
+          pillar: "systems-thinking" as const,
+          imagePath: "blog/images/meeting-audit.png",
         }}
         durationInFrames={1}
         fps={30}
-        width={1920}
-        height={1080}
+        width={1280}
+        height={720}
+      />
+
+      <Composition
+        id="Active-FeaturedImage-InboxZero"
+        component={FeaturedImage}
+
+        defaultProps={{
+          hookText: "3 hours a day on email.",
+          hookHighlight: "Not anymore.",
+          pillar: "practical-ai" as const,
+          imagePath: "blog/images/no-admin-inbox-zero.png",
+        }}
+        durationInFrames={1}
+        fps={30}
+        width={1280}
+        height={720}
       />
 
       {/* Blog Headers (static stills) */}

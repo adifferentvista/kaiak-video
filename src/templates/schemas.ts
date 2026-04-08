@@ -57,7 +57,10 @@ export const featuredImageSchema = z.object({
       "education",
     ])
     .default("practical-ai"),
-  imagePath: z.string().default("blog/images/placeholder.png"),
+  imagePath: z.string().default("blog/images/meeting-audit.png"),
+  fontSize: z.number().default(52),
+  textColor: z.string().default("#0F172A"),
+  highlightColor: z.string().default("#EA580C"),
 });
 
 export const blogHeaderSchema = z.object({
