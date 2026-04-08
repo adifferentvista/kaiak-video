@@ -64,6 +64,21 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Composition
+        id="Active-FeaturedImage-NotebookLM"
+        component={FeaturedImage}
+        defaultProps={{
+          hookText: "200 pages.",
+          hookHighlight: "Zero hallucinations.",
+          pillar: "practical-ai",
+          imagePath: "blog/images/notebooklm-master-any-document.png",
+        }}
+        durationInFrames={1}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+
+      <Composition
         id="Active-FeaturedImage-InboxZero"
         component={FeaturedImage}
 
