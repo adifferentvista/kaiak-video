@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">55 nodes &middot; 38 edges &middot; 23 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "composite_featured", "label": "composite-featured.js", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 14.1, "font": {"size": 0, "color": "#ffffff"}, "title": "composite-featured.js", "community": 2, "community_name": "Featured Image Compositing", "source_file": "composite-featured.js", "file_type": "code", "degree": 3}, {"id": "composite_featured_createtextsvg", "label": "createTextSVG()", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "createTextSVG()", "community": 2, "community_name": "Featured Image Compositing", "source_file": "composite-featured.js", "file_type": "code", "degree": 2}, {"id": "composite_featured_compositeimage", "label": "compositeImage()", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 14.1, "font": {"size": 0, "color": "#ffffff"}, "title": "compositeImage()", "community": 2, "community_name": "Featured Image Compositing", "source_file": "composite-featured.js", "file_type": "code", "degree": 3}, {"id": "composite_featured_main", "label": "main()", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "main()", "community": 2, "community_name": "Featured Image Compositing", "source_file": "composite-featured.js", "file_type": "code", "degree": 2}, {"id": "generate_image", "label": "generate-image.js", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "generate-image.js", "community": 5, "community_name": "Image Generation API", "source_file": "generate-image.js", "file_type": "code", "degree": 1}, {"id": "generate_image_generateimage", "label": "generateImage()", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "generateImage()", "community": 5, "community_name": "Image Generation API", "source_file": "generate-image.js", "file_type": "code", "degree": 1}, {"id": "remotion_config", "label": "remotion.config.ts", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "remotion.config.ts", "community": 8, "community_name": "Claude Terminal", "source_file": "remotion.config.ts", "file_type": "code", "degree": 0}, {"id": "update_frontmatter", "label": "update-frontmatter.js", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "update-frontmatter.js", "community": 9, "community_name": "Blog Header Template", "source_file": "update-frontmatter.js", "file_type": "code", "degree": 0}, {"id": "composition", "label": "Composition.tsx", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 16.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Composition.tsx", "community": 1, "community_name": "Hero Video Scenes", "source_file": "src\\Composition.tsx", "file_type": "code", "degree": 5}, {"id": "index", "label": "index.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "index.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\templates\\index.tsx", "file_type": "code", "degree": 1}, {"id": "root", "label": "Root.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Root.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\Root.tsx", "file_type": "code", "degree": 22}, {"id": "barchart", "label": "BarChart.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "BarChart.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\BarChart.tsx", "file_type": "code", "degree": 1}, {"id": "beforeafter", "label": "BeforeAfter.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "BeforeAfter.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\BeforeAfter.tsx", "file_type": "code", "degree": 1}, {"id": "beforeafterfluent", "label": "BeforeAfterFluent.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "BeforeAfterFluent.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\BeforeAfterFluent.tsx", "file_type": "code", "degree": 1}, {"id": "beforeafterheroicons", "label": "BeforeAfterHeroicons.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "BeforeAfterHeroicons.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\BeforeAfterHeroicons.tsx", "file_type": "code", "degree": 1}, {"id": "beforeafterphosphor", "label": "BeforeAfterPhosphor.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "BeforeAfterPhosphor.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\BeforeAfterPhosphor.tsx", "file_type": "code", "degree": 1}, {"id": "brandoutro", "label": "BrandOutro.tsx", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "BrandOutro.tsx", "community": 1, "community_name": "Hero Video Scenes", "source_file": "src\\components\\BrandOutro.tsx", "file_type": "code", "degree": 1}, {"id": "browserwindow", "label": "BrowserWindow.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "BrowserWindow.tsx", "community": 10, "community_name": "Featured Image Template", "source_file": "src\\components\\BrowserWindow.tsx", "file_type": "code", "degree": 0}, {"id": "cinematicintro", "label": "CinematicIntro.tsx", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 12.7, "font": {"size": 0, "color": "#ffffff"}, "title": "CinematicIntro.tsx", "community": 6, "community_name": "Cinematic Intro Component", "source_file": "src\\components\\CinematicIntro.tsx", "file_type": "code", "degree": 2}, {"id": "cinematicintro_particle", "label": "Particle()", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "Particle()", "community": 6, "community_name": "Cinematic Intro Component", "source_file": "src\\components\\CinematicIntro.tsx", "file_type": "code", "degree": 1}, {"id": "claudeterminal", "label": "ClaudeTerminal.tsx", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ClaudeTerminal.tsx", "community": 11, "community_name": "Blog Hero Template", "source_file": "src\\components\\ClaudeTerminal.tsx", "file_type": "code", "degree": 0}, {"id": "codediff", "label": "CodeDiff.tsx", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 14.1, "font": {"size": 0, "color": "#ffffff"}, "title": "CodeDiff.tsx", "community": 3, "community_name": "Code Diff Component", "source_file": "src\\components\\CodeDiff.tsx", "file_type": "code", "degree": 3}, {"id": "codediff_getcolor", "label": "getColor()", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "getColor()", "community": 3, "community_name": "Code Diff Component", "source_file": "src\\components\\CodeDiff.tsx", "file_type": "code", "degree": 1}, {"id": "codediff_getbg", "label": "getBg()", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "getBg()", "community": 3, "community_name": "Code Diff Component", "source_file": "src\\components\\CodeDiff.tsx", "file_type": "code", "degree": 1}, {"id": "courseoverview", "label": "CourseOverview.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "CourseOverview.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\CourseOverview.tsx", "file_type": "code", "degree": 1}, {"id": "courseoverviewfluent", "label": "CourseOverviewFluent.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "CourseOverviewFluent.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\CourseOverviewFluent.tsx", "file_type": "code", "degree": 1}, {"id": "courseoverviewheroicons", "label": "CourseOverviewHeroicons.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "CourseOverviewHeroicons.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\CourseOverviewHeroicons.tsx", "file_type": "code", "degree": 1}, {"id": "dashboard", "label": "Dashboard.tsx", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "Dashboard.tsx", "community": 1, "community_name": "Hero Video Scenes", "source_file": "src\\components\\Dashboard.tsx", "file_type": "code", "degree": 1}, {"id": "kineticmarketing", "label": "KineticMarketing.tsx", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 14.1, "font": {"size": 0, "color": "#ffffff"}, "title": "KineticMarketing.tsx", "community": 4, "community_name": "Kinetic Marketing Effects", "source_file": "src\\components\\KineticMarketing.tsx", "file_type": "code", "degree": 3}, {"id": "kineticmarketing_floatinglogo", "label": "FloatingLogo()", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "FloatingLogo()", "community": 4, "community_name": "Kinetic Marketing Effects", "source_file": "src\\components\\KineticMarketing.tsx", "file_type": "code", "degree": 1}, {"id": "kineticmarketing_radarring", "label": "RadarRing()", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "RadarRing()", "community": 4, "community_name": "Kinetic Marketing Effects", "source_file": "src\\components\\KineticMarketing.tsx", "file_type": "code", "degree": 1}, {"id": "kinetictypography", "label": "KineticTypography.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "KineticTypography.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\KineticTypography.tsx", "file_type": "code", "degree": 1}, {"id": "logotest", "label": "LogoTest.tsx", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "LogoTest.tsx", "community": 12, "community_name": "Stat Highlight Template", "source_file": "src\\components\\LogoTest.tsx", "file_type": "code", "degree": 0}, {"id": "mapjourney", "label": "MapJourney.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "MapJourney.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\MapJourney.tsx", "file_type": "code", "degree": 1}, {"id": "painpoints", "label": "PainPoints.tsx", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "PainPoints.tsx", "community": 1, "community_name": "Hero Video Scenes", "source_file": "src\\components\\PainPoints.tsx", "file_type": "code", "degree": 1}, {"id": "perspectivelaunch", "label": "PerspectiveLaunch.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "PerspectiveLaunch.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\PerspectiveLaunch.tsx", "file_type": "code", "degree": 1}, {"id": "perspectivelaunchwindows_20260407", "label": "PerspectiveLaunchWindows-20260407.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "PerspectiveLaunchWindows-20260407.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\PerspectiveLaunchWindows-20260407.tsx", "file_type": "code", "degree": 1}, {"id": "perspectivelaunchwindows", "label": "PerspectiveLaunchWindows.tsx", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "PerspectiveLaunchWindows.tsx", "community": 13, "community_name": "Comparison Split Template", "source_file": "src\\components\\PerspectiveLaunchWindows.tsx", "file_type": "code", "degree": 0}, {"id": "socialproof", "label": "SocialProof.tsx", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "SocialProof.tsx", "community": 14, "community_name": "Framework Diagram Template", "source_file": "src\\components\\SocialProof.tsx", "file_type": "code", "degree": 0}, {"id": "solutionreveal", "label": "SolutionReveal.tsx", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "SolutionReveal.tsx", "community": 1, "community_name": "Hero Video Scenes", "source_file": "src\\components\\SolutionReveal.tsx", "file_type": "code", "degree": 1}, {"id": "terminalintro", "label": "TerminalIntro.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "TerminalIntro.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\TerminalIntro.tsx", "file_type": "code", "degree": 1}, {"id": "testimonialspotlight", "label": "TestimonialSpotlight.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "TestimonialSpotlight.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\TestimonialSpotlight.tsx", "file_type": "code", "degree": 1}, {"id": "toolshowcase", "label": "ToolShowcase.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "ToolShowcase.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\ToolShowcase.tsx", "file_type": "code", "degree": 1}, {"id": "transparentcta", "label": "TransparentCTA.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "TransparentCTA.tsx", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\components\\TransparentCTA.tsx", "file_type": "code", "degree": 1}, {"id": "youtubeplayer", "label": "YouTubePlayer.tsx", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "YouTubePlayer.tsx", "community": 15, "community_name": "Call To Action Template", "source_file": "src\\components\\YouTubePlayer.tsx", "file_type": "code", "degree": 0}, {"id": "blogheader", "label": "BlogHeader.tsx", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "BlogHeader.tsx", "community": 16, "community_name": "YouTube Player", "source_file": "src\\templates\\BlogHeader.tsx", "file_type": "code", "degree": 0}, {"id": "bloghero", "label": "BlogHero.tsx", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "BlogHero.tsx", "community": 17, "community_name": "Social Proof Component", "source_file": "src\\templates\\BlogHero.tsx", "file_type": "code", "degree": 0}, {"id": "blogherovisual", "label": "BlogHeroVisual.tsx", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "BlogHeroVisual.tsx", "community": 18, "community_name": "Logo Test", "source_file": "src\\templates\\BlogHeroVisual.tsx", "file_type": "code", "degree": 0}, {"id": "calltoaction", "label": "CallToAction.tsx", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "CallToAction.tsx", "community": 19, "community_name": "Frontmatter Update Script", "source_file": "src\\templates\\CallToAction.tsx", "file_type": "code", "degree": 0}, {"id": "comparisonsplit", "label": "ComparisonSplit.tsx", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ComparisonSplit.tsx", "community": 20, "community_name": "CSS Styles", "source_file": "src\\templates\\ComparisonSplit.tsx", "file_type": "code", "degree": 0}, {"id": "featuredimage_20260407", "label": "FeaturedImage-20260407.tsx", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "FeaturedImage-20260407.tsx", "community": 7, "community_name": "Browser Window Chrome", "source_file": "src\\templates\\FeaturedImage-20260407.tsx", "file_type": "code", "degree": 1}, {"id": "featuredimage_20260407_safestaticfile", "label": "safeStaticFile()", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "safeStaticFile()", "community": 7, "community_name": "Browser Window Chrome", "source_file": "src\\templates\\FeaturedImage-20260407.tsx", "file_type": "code", "degree": 1}, {"id": "frameworkdiagram", "label": "FrameworkDiagram.tsx", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "FrameworkDiagram.tsx", "community": 21, "community_name": "Remotion Config", "source_file": "src\\templates\\FrameworkDiagram.tsx", "file_type": "code", "degree": 0}, {"id": "schemas", "label": "schemas.ts", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.4, "font": {"size": 0, "color": "#ffffff"}, "title": "schemas.ts", "community": 0, "community_name": "Remotion Compositions & Root", "source_file": "src\\templates\\schemas.ts", "file_type": "code", "degree": 1}, {"id": "stathighlight", "label": "StatHighlight.tsx", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "StatHighlight.tsx", "community": 22, "community_name": "ESLint Config", "source_file": "src\\templates\\StatHighlight.tsx", "file_type": "code", "degree": 0}];
+const RAW_EDGES = [{"from": "composite_featured", "to": "composite_featured_createtextsvg", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composite_featured", "to": "composite_featured_compositeimage", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composite_featured", "to": "composite_featured_main", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composite_featured_createtextsvg", "to": "composite_featured_compositeimage", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "composite_featured_compositeimage", "to": "composite_featured_main", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "generate_image", "to": "generate_image_generateimage", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composition", "to": "painpoints", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composition", "to": "solutionreveal", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composition", "to": "dashboard", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composition", "to": "brandoutro", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "composition", "to": "root", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index", "to": "root", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "toolshowcase", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "beforeafter", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "beforeafterphosphor", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "beforeafterheroicons", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "beforeafterfluent", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "testimonialspotlight", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "courseoverview", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "courseoverviewheroicons", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "courseoverviewfluent", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "terminalintro", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "barchart", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "perspectivelaunch", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "schemas", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "perspectivelaunchwindows_20260407", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "kinetictypography", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "codediff", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "mapjourney", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "kineticmarketing", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "transparentcta", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "root", "to": "cinematicintro", "label": "imports_from", "title": "imports_from [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "cinematicintro", "to": "cinematicintro_particle", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "codediff", "to": "codediff_getcolor", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "codediff", "to": "codediff_getbg", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "kineticmarketing", "to": "kineticmarketing_floatinglogo", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "kineticmarketing", "to": "kineticmarketing_radarring", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "featuredimage_20260407", "to": "featuredimage_20260407_safestaticfile", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Remotion Compositions &amp; Root", "count": 19}, {"cid": 1, "color": "#F28E2B", "label": "Hero Video Scenes", "count": 5}, {"cid": 2, "color": "#E15759", "label": "Featured Image Compositing", "count": 4}, {"cid": 3, "color": "#76B7B2", "label": "Code Diff Component", "count": 3}, {"cid": 4, "color": "#59A14F", "label": "Kinetic Marketing Effects", "count": 3}, {"cid": 5, "color": "#EDC948", "label": "Image Generation API", "count": 2}, {"cid": 6, "color": "#B07AA1", "label": "Cinematic Intro Component", "count": 2}, {"cid": 7, "color": "#FF9DA7", "label": "Browser Window Chrome", "count": 2}, {"cid": 8, "color": "#9C755F", "label": "Claude Terminal", "count": 1}, {"cid": 9, "color": "#BAB0AC", "label": "Blog Header Template", "count": 1}, {"cid": 10, "color": "#4E79A7", "label": "Featured Image Template", "count": 1}, {"cid": 11, "color": "#F28E2B", "label": "Blog Hero Template", "count": 1}, {"cid": 12, "color": "#E15759", "label": "Stat Highlight Template", "count": 1}, {"cid": 13, "color": "#76B7B2", "label": "Comparison Split Template", "count": 1}, {"cid": 14, "color": "#59A14F", "label": "Framework Diagram Template", "count": 1}, {"cid": 15, "color": "#EDC948", "label": "Call To Action Template", "count": 1}, {"cid": 16, "color": "#B07AA1", "label": "YouTube Player", "count": 1}, {"cid": 17, "color": "#FF9DA7", "label": "Social Proof Component", "count": 1}, {"cid": 18, "color": "#9C755F", "label": "Logo Test", "count": 1}, {"cid": 19, "color": "#BAB0AC", "label": "Frontmatter Update Script", "count": 1}, {"cid": 20, "color": "#4E79A7", "label": "CSS Styles", "count": 1}, {"cid": 21, "color": "#F28E2B", "label": "Remotion Config", "count": 1}, {"cid": 22, "color": "#E15759", "label": "ESLint Config", "count": 1}];
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${color}" onclick="focusNode('${nid}')">${nb ? nb.label : nid}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${n.label}</b></div>
+    <div class="field">Type: ${n._file_type || 'unknown'}</div>
+    <div class="field">Community: ${n._community_name}</div>
+    <div class="field">Source: ${n._source_file || '-'}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+network.on('click', params => {
+  if (params.nodes.length > 0) showInfo(params.nodes[0]);
+  else document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.onclick = () => {
+    if (hiddenCommunities.has(c.cid)) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: hiddenCommunities.has(c.cid) }));
+    nodesDS.update(updates);
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [];
+function drawHyperedges() {
+    const canvas = network.canvas.frame.canvas;
+    const ctx = canvas.getContext('2d');
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        // Draw convex hull as filled polygon
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const scale = network.getScale();
+        const offset = network.getViewPosition();
+        const toCanvas = (p) => ({
+            x: (p.x - offset.x) * scale + canvas.width / 2,
+            y: (p.y - offset.y) * scale + canvas.height / 2
+        });
+        const pts = positions.map(toCanvas);
+        // Expand hull slightly
+        const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
+        const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+        const expanded = pts.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+}
+network.on('afterDrawing', drawHyperedges);
+</script>
+</body>
+</html>

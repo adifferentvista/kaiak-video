@@ -1,0 +1,1 @@
+{"nodes": [{"id": "painpoints", "label": "PainPoints.tsx", "file_type": "code", "source_file": "src\\components\\PainPoints.tsx", "source_location": "L1"}], "edges": [{"source": "painpoints", "target": "remotion", "relation": "imports_from", "confidence": "EXTRACTED", "source_file": "src\\components\\PainPoints.tsx", "source_location": "L1", "weight": 1.0}]}
