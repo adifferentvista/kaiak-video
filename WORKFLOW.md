@@ -115,7 +115,7 @@ When `image` field is set in MDX frontmatter:
 
 ## API Keys
 
-- **Google Imagen 4:** ***REDACTED***
+- **Google Imagen 4:** stored in `.env` file (never commit this)
 - **Model:** imagen-4.0-generate-001
 
 ## File Locations

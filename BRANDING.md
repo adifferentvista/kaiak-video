@@ -35,6 +35,18 @@
 - Bright orange (`#f97316`) — use the warmer `#e2711d`
 - Dark backgrounds for brand videos — cream is on-brand
 
+## Blog Inline Visuals (Remotion → static PNG → WebP)
+
+When creating visuals for blog posts (rendered as still frames):
+
+- **Background:** `linear-gradient(170deg, #FFF7ED 0%, #FEF0E0 100%)` — warm orange-cream, NOT dark navy
+- **Cards:** White, `border: 1px solid rgba(15,23,42,0.08)`, `border-radius: 14-16px`, `box-shadow: 0 2px 8px rgba(0,0,0,0.03)`
+- **Step indicators:** Numbered badges (`01`, `02`, etc.) in coloured pills — NEVER use emojis or Google icons
+- **Table rows:** Small coloured dots (8px circles) as row indicators
+- **Pipeline/flow visuals:** Horizontal cards with step badges, monospace command box, detail text in accent colour, orange arrows between steps. Summary pill at bottom.
+- **Fonts:** Inter (body/UI), InstrumentSerif (headings) via `@remotion/google-fonts`
+- **Reference:** `src/components/ImagePipeline.tsx` is the canonical pipeline style
+
 ## Typography
 - **Headings:** Georgia, serif (400 for body, 700 for emphasis)
 - **Body/UI:** system-ui, sans-serif (or Inter via @remotion/google-fonts)

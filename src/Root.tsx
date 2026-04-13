@@ -39,10 +39,58 @@ import { MapJourney } from "./components/MapJourney";
 import { KineticMarketing } from "./components/KineticMarketing";
 import { TransparentCTA } from "./components/TransparentCTA";
 import { CinematicIntro } from "./components/CinematicIntro";
+import { ClaudeCodeLoop, ManualVsAutomated, TimeSavedDashboard } from "./components/BlogVisuals";
+import { ImagePipeline } from "./components/ImagePipeline";
+import { WorkflowDiagram } from "./components/WorkflowDiagram";
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      {/* ============================================
+          BLOG VISUALS — Static renders for posts
+          ============================================ */}
+      <Composition
+        id="Blog-ClaudeCodeLoop"
+        component={ClaudeCodeLoop}
+        durationInFrames={90}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="Blog-ManualVsAutomated"
+        component={ManualVsAutomated}
+        durationInFrames={90}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="Blog-TimeSavedDashboard"
+        component={TimeSavedDashboard}
+        durationInFrames={90}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+
+      <Composition
+        id="Blog-WorkflowDiagram"
+        component={WorkflowDiagram}
+        durationInFrames={90}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+      <Composition
+        id="Blog-ImagePipeline"
+        component={ImagePipeline}
+        durationInFrames={90}
+        fps={30}
+        width={1280}
+        height={720}
+      />
+
       {/* ============================================
           1. ACTIVE — Currently being refined
           ============================================ */}

@@ -1,6 +1,12 @@
 const fs = require('fs');
+require('dotenv').config();
 
-const API_KEY = '***REDACTED***';
+const API_KEY = process.env.GOOGLE_API_KEY;
+
+if (!API_KEY) {
+  console.error('Missing GOOGLE_API_KEY in .env file');
+  process.exit(1);
+}
 
 async function generateImage(prompt, outputPath) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${API_KEY}`;
